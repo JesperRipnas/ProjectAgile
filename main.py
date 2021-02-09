@@ -1,7 +1,6 @@
 import pygame
 import math
 
-
 def knapp(circlecenter):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:   ##### DOWN NU, FIXA!
         x1, y1 = pygame.mouse.get_pos()
@@ -9,14 +8,14 @@ def knapp(circlecenter):
         distance = math.hypot(x1 - x2, y1 - y2)
         if distance <= 25:  ##### 25 = circle area
             print("X")
-##########################
+
 def background(path):
     screen.fill(GRAY)
     backgroundPic = pygame.image.load(path)
     backgroundPic = pygame.transform.scale(backgroundPic, (580, 745)) ###### FIXA!
     printPic = backgroundPic.get_rect()
     screen.blit(backgroundPic, printPic)
-
+    
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -56,8 +55,6 @@ pygame.init()
 WINDOW_SIZE = width, height = 580, 740
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
-
-
 # Set title of screen
 pygame.display.set_caption("Tamagotchi")
 
@@ -66,6 +63,7 @@ done = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
+pygame.time.set_timer(pygame.USEREVENT+1,1000)
 
 # -------- Main Program Loop -----------
 while not done:
@@ -102,6 +100,8 @@ while not done:
                     print("Click ", pos, "Grid coordinates: ", row, column)
                 except:
                     print("Utanför!")
+        elif event.type==pygame.USEREVENT+1:
+            print("ok")
 
     # Set the screen background
     background('test.png')
@@ -112,9 +112,6 @@ while not done:
     knapp((280,600))    # Knapp B
     pygame.draw.circle(screen, BLACK, (390, 600), 25)  ##### TA BORT EFTER TEST!  C
     knapp((390, 590))   # Knapp C
-
-
-
 
     # Draw the grid
     for row in range(32):
