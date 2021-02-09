@@ -4,6 +4,10 @@ import pygame
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (127, 127, 127)
+
+# Mouse buttons
+LEFT = 1
+RIGHT = 3
  
 # Width & Height of each cell
 WIDTH = 6
@@ -43,7 +47,7 @@ while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
             # Change the x/y screen coordinates to grid coordinates
@@ -51,6 +55,15 @@ while not done:
             row = pos[1] // (HEIGHT + MARGIN)
             # Set that location to one
             grid[row][column] = 1
+            print("Click ", pos, "Grid coordinates: ", row, column)
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
+            # User clicks the mouse. Get the position
+            pos = pygame.mouse.get_pos()
+            # Change the x/y screen coordinates to grid coordinates
+            column = pos[0] // (WIDTH + MARGIN)
+            row = pos[1] // (HEIGHT + MARGIN)
+            # Set that location to one
+            grid[row][column] = 0
             print("Click ", pos, "Grid coordinates: ", row, column)
  
     # Set the screen background
