@@ -9,7 +9,7 @@ def knapp(circlecenter):
         distance = math.hypot(x1 - x2, y1 - y2)
         if distance <= 25:  ##### 25 = circle area
             print("X")
-
+##########################
 def background(path):
     screen.fill(GRAY)
     backgroundPic = pygame.image.load(path)
