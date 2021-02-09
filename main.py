@@ -1,6 +1,7 @@
 import pygame
 import math
 import os
+from tamagotchi import * 
 
 def knapp(circlecenter):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:   ##### DOWN NU, FIXA!
@@ -17,6 +18,13 @@ def background(path):
     printPic = backgroundPic.get_rect()
     screen.blit(backgroundPic, printPic)
     
+def debug(debug_var_list, x ,y, fontsize):
+    debug_font = pygame.font.Font(None, fontsize)
+    
+    debug_pos = [x,y]
+    for i, line in enumerate(debug_var_list):
+        screen.blit(debug_font.render(line,1, (0,0,0)), (x, y + (i * 20)))
+
 
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
@@ -40,6 +48,9 @@ MARGIN = 2
 #
 WINDOWMARGINX = 160
 WINDOWMARGINY = 250
+
+seconds_elapsed = 0
+
 
 # Create a 2 dimensional array.
 grid = []
@@ -68,6 +79,9 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 pygame.time.set_timer(pygame.USEREVENT+1,1000)
+
+current_tamagotchi = Tamagotchi("Dude",19911014)
+
 
 # -------- Main Program Loop -----------
 while not done:
@@ -105,9 +119,14 @@ while not done:
                 except:
                     print("Utanför!")
         elif event.type==pygame.USEREVENT+1:
-            print("ok")
+            seconds_elapsed += 1
+            print(seconds_elapsed)
+            if seconds_elapsed % 365 == 0:
+                current_tamagotchi.age += 1
+                print("Happy bday")
     # Set the screen background
     background(assetpath + 'test.png')
+
 
     pygame.draw.circle(screen, BLACK, (190, 600), 25)  ##### TA BORT EFTER TEST!  A
     knapp((180, 590)) # Knapp A
@@ -115,7 +134,7 @@ while not done:
     knapp((280,600))    # Knapp B
     pygame.draw.circle(screen, BLACK, (390, 600), 25)  ##### TA BORT EFTER TEST!  C
     knapp((390, 590))   # Knapp C
-
+    debug(["Test", str(seconds_elapsed), str(current_tamagotchi.age)], 50, 50, 20)
     # Draw the grid
     for row in range(32):
         for column in range(32):

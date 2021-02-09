@@ -4,7 +4,7 @@ class Tamagotchi:
         self.hunger = 100
         self.energy = 100
         self.birthday = birthday
-        
+        self.age = 0
     
     def update(self):
         self._energy(-3)
