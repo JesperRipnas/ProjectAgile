@@ -66,19 +66,23 @@ for row in range(32):
 pygame.init()
 
 # Set the HEIGHT and WIDTH of the screen
-
 WINDOW_SIZE = width, height = 580, 740
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Set title of screen
 pygame.display.set_caption("Tamagotchi")
 
+# Background music
+pygame.mixer.music.load(assetpath + 'backgroundsong.mp3')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.1)
+
 # Loop until the user clicks the close button.
 done = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
-pygame.time.set_timer(pygame.USEREVENT+1,1000)
+pygame.time.set_timer(pygame.USEREVENT+1,100)
 
 current_tamagotchi = Tamagotchi("Dude",19911014)
 
@@ -134,7 +138,7 @@ while not done:
     knapp((280,600))    # Knapp B
     pygame.draw.circle(screen, BLACK, (390, 600), 25)  ##### TA BORT EFTER TEST!  C
     knapp((390, 590))   # Knapp C
-    debug(["Test", str(seconds_elapsed), str(current_tamagotchi.age)], 50, 50, 20)
+    debug(["Day", str(seconds_elapsed), "Year", str(current_tamagotchi.age)], 10, 10, 20)
     # Draw the grid
     for row in range(32):
         for column in range(32):
