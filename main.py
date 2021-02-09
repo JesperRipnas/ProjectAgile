@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 
 def knapp(circlecenter):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:   ##### DOWN NU, FIXA!
@@ -16,6 +17,9 @@ def background(path):
     printPic = backgroundPic.get_rect()
     screen.blit(backgroundPic, printPic)
     
+
+assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
+
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -102,9 +106,8 @@ while not done:
                     print("Utanför!")
         elif event.type==pygame.USEREVENT+1:
             print("ok")
-
     # Set the screen background
-    background('Assets/test.png')
+    background(assetpath + 'test.png')
 
     pygame.draw.circle(screen, BLACK, (190, 600), 25)  ##### TA BORT EFTER TEST!  A
     knapp((180, 590)) # Knapp A
