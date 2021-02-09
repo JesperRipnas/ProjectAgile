@@ -130,12 +130,13 @@ while not done:
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
             print(seconds_elapsed)
+            current_tamagotchi.update()
             if seconds_elapsed % 365 == 0:
                 current_tamagotchi.age += 1
                 print("Happy bday")
     # Set the screen background
     background(assetpath + 'test.png')
-    debug(["Day", str(seconds_elapsed), "Year", str(current_tamagotchi.age)], 10, 10, 20)
+    debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy) ], 10, 10, 20)
     # Draw the grid
     for row in range(32):
         for column in range(32):

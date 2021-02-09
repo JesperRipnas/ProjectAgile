@@ -35,7 +35,7 @@ class Tamagotchi:
 
 
     def _sleep(self):
-            self.energy(100)
+            self.energy = 100
 
 
     def gameover(self):
