@@ -4,12 +4,10 @@ import os
 from tamagotchi import * 
 
 def knapp(circlecenter):
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:   ##### DOWN NU, FIXA!
-        x1, y1 = pygame.mouse.get_pos()
-        x2, y2 = circlecenter
-        distance = math.hypot(x1 - x2, y1 - y2)
-        if distance <= 25:  ##### 25 = circle area
-            print("X")
+    x1, y1 = pygame.mouse.get_pos()
+    x2, y2 = circlecenter
+    distance = math.hypot(x1 - x2, y1 - y2)
+    return distance
 
 def background(path):
     screen.fill(GRAY)
@@ -95,10 +93,17 @@ while not done:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
 
+            if knapp((180, 590)) <= 25:    # Knapp A
+                print("AAAAAAAAAA")
+            if knapp((290, 625)) <= 25:    # Knapp B
+                print("BBBBBBBBB")
+            if knapp((390, 590)) <= 25:    # Knapp C
+                print("CCCCCCC")
+
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
 
-            if pos[0] > 100 and pos[1] > 100:
+            if pos[0] > WINDOWMARGINX and pos[1] > WINDOWMARGINY:
                 try:
                 # Change the x/y screen coordinates to grid coordinates
                     column = (pos[0] - WINDOWMARGINX)// (WIDTH + MARGIN)
@@ -107,12 +112,12 @@ while not done:
                     grid[row][column] = 1
                     print("Click ", pos, "Grid coordinates: ", row, column)
                 except:
-                    print("utanför!")
+                    pass
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
             #try:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
-            if pos[0] > 100 and pos[1] > 100:
+            if pos[0] > WINDOWMARGINX and pos[1] > WINDOWMARGINY:
                 try:
                 # Change the x/y screen coordinates to grid coordinates
                     column = (pos[0] - WINDOWMARGINX) // (WIDTH + MARGIN)
@@ -121,7 +126,7 @@ while not done:
                     grid[row][column] = 0
                     print("Click ", pos, "Grid coordinates: ", row, column)
                 except:
-                    print("Utanför!")
+                    pass
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
             print(seconds_elapsed)
@@ -130,14 +135,6 @@ while not done:
                 print("Happy bday")
     # Set the screen background
     background(assetpath + 'test.png')
-
-
-    pygame.draw.circle(screen, BLACK, (190, 600), 25)  ##### TA BORT EFTER TEST!  A
-    knapp((180, 590)) # Knapp A
-    pygame.draw.circle(screen, BLACK, (290, 625), 25)  ##### TA BORT EFTER TEST!  B
-    knapp((280,600))    # Knapp B
-    pygame.draw.circle(screen, BLACK, (390, 600), 25)  ##### TA BORT EFTER TEST!  C
-    knapp((390, 590))   # Knapp C
     debug(["Day", str(seconds_elapsed), "Year", str(current_tamagotchi.age)], 10, 10, 20)
     # Draw the grid
     for row in range(32):
