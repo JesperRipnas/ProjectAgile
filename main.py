@@ -41,6 +41,7 @@ done = False
  
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
+pygame.time.set_timer(pygame.USEREVENT+1,1000)
  
 # -------- Main Program Loop -----------
 while not done:
@@ -65,6 +66,8 @@ while not done:
             # Set that location to one
             grid[row][column] = 0
             print("Click ", pos, "Grid coordinates: ", row, column)
+        elif event.type==pygame.USEREVENT+1:
+            print("ok")
  
     # Set the screen background
     screen.fill(GRAY)
