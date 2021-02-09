@@ -4,10 +4,11 @@ class Tamagotchi:
         self.hunger = 100
         self.energy = 100
         self.birthday = birthday
+        
     
     def update(self):
-        self._energy()
-        self._hunger()
+        self._energy(-3)
+        self._hunger(-1)
 
 
     def _hunger(self, change = -3):
@@ -16,16 +17,27 @@ class Tamagotchi:
         if self.hunger > 100:
             self.hunger = 100
         if self.hunger <= 0:
-            self. hunger = 0
-            #dying die()?
-        print(self.hunger)
-    
+            self.gameover()
 
+    
     def _eat(self):
         self._hunger(40)
 
 
-    def _energy(self):
-        1 + 1
-        #energy logic
+    def _energy(self, change = -1):
+        if self.energy > 0 and self.energy <= 100:
+            self.energy += change
+        elif self.energy > 100:
+            self.energy = 100
+        else:
+            print('Sleeping')
+            self._sleep()
+
+
+    def _sleep(self):
+            self.energy(100)
+
+
+    def gameover(self):
+        print('Game over')
 
