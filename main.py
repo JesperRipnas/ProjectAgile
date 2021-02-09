@@ -104,7 +104,7 @@ while not done:
             print("ok")
 
     # Set the screen background
-    background('test.png')
+    background('Assets/test.png')
 
     pygame.draw.circle(screen, BLACK, (190, 600), 25)  ##### TA BORT EFTER TEST!  A
     knapp((180, 590)) # Knapp A
