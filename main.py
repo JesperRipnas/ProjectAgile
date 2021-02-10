@@ -74,8 +74,12 @@ def buttonA():
 
 def buttonB():
     if current_tamagotchi.hunger_state:
+        global eating_animation
+        eating_animation = True
         current_tamagotchi._eat()
     elif current_tamagotchi.energy_state:
+        global sleeping_animation
+        sleeping_animation = True
         current_tamagotchi._sleep()
     buttonpress()
 
@@ -178,6 +182,9 @@ current_tamagotchi = Tamagotchi("Dude",19911014)
 # Animtaion and timer to controll the speed
 animation = Animation()
 pygame.time.set_timer(pygame.USEREVENT+2,500)
+eating_animation = False
+sleeping_animation = False
+animation_itteration = 0
 
 
 # -------- Main Program Loop -----------
@@ -252,14 +259,33 @@ while not done:
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
             #print(seconds_elapsed)#####################################################################################
-            current_tamagotchi.update()
-            if seconds_elapsed % 365 == 0:
+            
+            if not current_tamagotchi.dead:
+                current_tamagotchi.update()
+                if seconds_elapsed % 365 == 0:
+                    current_tamagotchi.age += 1
+                    print("Happy bday")
+
+        #Animation timer cycle
+        elif event.type==pygame.USEREVENT+2:
+            if current_tamagotchi.dead:
+                animation.play_dying()
+            elif eating_animation:
+                animation_itteration += 1
+                animation.play_eat()
+                if animation_itteration >= 4:
+                    eating_animation = False
+                    animation_itteration = 0
+            elif sleeping_animation:
+                animation_itteration += 1
+                animation.play_sleep()
+                if animation_itteration >= 8:
+                    sleeping_animation = False
+                    animation_itteration = 0
+            elif seconds_elapsed % 365 == 0 and seconds_elapsed is not 0:
                 animation.play_birthday()
-                current_tamagotchi.age += 1
-                print("Happy bday")
             else:
                 animation.play_idle()
-        elif event.type==pygame.USEREVENT+2:
             grid = animation.play_animation()
 
 
