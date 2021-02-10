@@ -68,6 +68,33 @@ def buttonA():
     duration = 25  # Set Duration To 1000 ms == 1 second
     winsound.Beep(frequency, duration) # Change sound!
 
+def buttonC():
+    current_tamagotchi.popup_state = not current_tamagotchi.popup_state
+
+def popup():
+    popupbg = pygame.image.load(assetpath + 'popupbg.png')
+    popupbg = pygame.transform.scale(popupbg, (127, 150))
+    font = pygame.font.SysFont('timesnewroman', 13)
+    popuptext_name = font.render('Name: '+str(current_tamagotchi.name), True, (0,0,0), None)
+    popuptext_birthday = font.render('Birthday: '+str(current_tamagotchi.birthday), True, (0,0,0), None)
+    popuptext_cash = font.render('Cash: $'+str(current_tamagotchi.cash), True, (0,0,0), None)
+    popuptext_loan = font.render('Loan: $'+str(current_tamagotchi.loan), True, (0,0,0), None)
+    popuptext_happiness = font.render('Happiness: '+str(current_tamagotchi.happiness), True, (0,0,0), None)
+    popuptext_exercise = font.render('Workout: '+str(current_tamagotchi.exercise), True, (0,0,0), None)
+    popuptext_drunk = font.render('Drunk: '+str(current_tamagotchi.drunk), True, (0,0,0), None)
+    if current_tamagotchi.popup_state == False:
+        popupbg = pygame.image.load(assetpath + 'popupbgtrans.png')
+    elif current_tamagotchi.popup_state == True:
+        screen.blit(popupbg, (290,252))
+        screen.blit(popuptext_name, (295,260))
+        screen.blit(popuptext_birthday, (296,280))
+        screen.blit(popuptext_cash, (296,300))
+        screen.blit(popuptext_loan, (296,320))
+        screen.blit(popuptext_happiness, (296,340))
+        screen.blit(popuptext_exercise, (296,360))
+        screen.blit(popuptext_drunk, (296,380))
+
+
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
 # Colors
@@ -149,7 +176,7 @@ while not done:
             if button((290, 625)) <= 25:    # Button B
                 print("B knapp tryckt")
             if button((390, 590)) <= 25:    # Button C
-                print("C knapp tryckt")
+                buttonC()
 
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -179,6 +206,8 @@ while not done:
                 except:
                     pass
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_3:
+                buttonC()
             if event.key == pygame.K_d:
                 show_debug = not show_debug
             if event.key == pygame.K_l:
@@ -233,6 +262,7 @@ while not done:
     food()
     sleep()
     timepassed()
+    popup()
 
     # Limit to 60 frames per second
     clock.tick(60)
