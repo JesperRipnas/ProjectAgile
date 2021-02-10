@@ -36,7 +36,7 @@ class Tamagotchi:
 
 
     def _energy(self, change = -1):
-        if self.energy > 0 and self.energy <= 100:
+        if self.energy > 2 and self.energy <= 100:
             self.energy += change
         elif self.energy > 100:
             self.energy = 100
