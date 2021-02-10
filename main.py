@@ -68,6 +68,12 @@ def buttonA():
     duration = 25  # Set Duration To 1000 ms == 1 second
     winsound.Beep(frequency, duration) # Change sound!
 
+def buttonB():
+    if current_tamagotchi.hunger_state:
+        current_tamagotchi._eat()
+    elif current_tamagotchi.energy_state:
+        current_tamagotchi._sleep()
+
 def buttonC():
     current_tamagotchi.popup_state = not current_tamagotchi.popup_state
 
@@ -174,7 +180,7 @@ while not done:
             if button((180, 590)) <= 25:    # Button A
                 buttonA()
             if button((290, 625)) <= 25:    # Button B
-                print("B knapp tryckt")
+                buttonB()
             if button((390, 590)) <= 25:    # Button C
                 buttonC()
 
