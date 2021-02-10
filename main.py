@@ -3,6 +3,7 @@ import math
 import os
 from tamagotchi import * 
 import winsound
+from animation import Animation
 
 
 def button(circlecenter):
@@ -91,7 +92,7 @@ WINDOWMARGINX = 160
 WINDOWMARGINY = 250
 
 seconds_elapsed = 0
-
+show_debug = False
 # Create a 2 dimensional array.
 grid = []
 for row in range(32):
@@ -120,11 +121,19 @@ pygame.mixer.music.set_volume(0.1)
 # Loop until the user clicks the close button.
 done = False
 
+
+game_speed = 1000
+paused = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
-pygame.time.set_timer(pygame.USEREVENT+1,100)
+pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
 
 current_tamagotchi = Tamagotchi("Dude",19911014)
+
+
+# Animtaion and timer to controll the speed
+animation = Animation()
+pygame.time.set_timer(pygame.USEREVENT+2,500)
 
 
 # -------- Main Program Loop -----------
@@ -169,17 +178,46 @@ while not done:
                     print("Click ", pos, "Grid coordinates: ", row, column)
                 except:
                     pass
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_d:
+                show_debug = not show_debug
+            if event.key == pygame.K_l:
+                if game_speed - 100 <= 0:
+                    game_speed = 0
+                    pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
+                else:
+                    game_speed = game_speed - 100
+                    pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
+            if event.key == pygame.K_k:
+                game_speed += 100
+                pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
+
+            if event.key == pygame.K_p:
+                if paused:
+                    pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
+                    paused = not paused
+                else:
+                    pygame.time.set_timer(pygame.USEREVENT+1,0)
+                    paused = not paused
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
             #print(seconds_elapsed)#####################################################################################
             current_tamagotchi.update()
             if seconds_elapsed % 365 == 0:
+                animation.play_birthday()
                 current_tamagotchi.age += 1
                 print("Happy bday")
+            else:
+                animation.play_idle()
+        elif event.type==pygame.USEREVENT+2:
+            grid = animation.play_animation()
 
     # Set the screen background
+
     background(assetpath + 'background.png')
-    debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy) ], 10, 10, 20)
+    if show_debug:
+        debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
+        "One day = " + str(game_speed) + " ms" ], 10, 10, 20)
     # Draw the grid
     for row in range(32):
         for column in range(32):
