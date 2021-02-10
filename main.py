@@ -112,7 +112,6 @@ def popup():
         screen.blit(popuptext_exercise, (296,360))
         screen.blit(popuptext_drunk, (296,380))
 
-
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
 # Colors
@@ -258,6 +257,7 @@ while not done:
                     paused = not paused
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
+
             #print(seconds_elapsed)#####################################################################################
             
             if not current_tamagotchi.dead:
@@ -265,6 +265,8 @@ while not done:
                 if seconds_elapsed % 365 == 0:
                     current_tamagotchi.age += 1
                     print("Happy bday")
+            if current_tamagotchi.hunger < 20:
+                warningsound()
 
         #Animation timer cycle
         elif event.type==pygame.USEREVENT+2:
@@ -283,9 +285,13 @@ while not done:
                     sleeping_animation = False
                     animation_itteration = 0
             elif seconds_elapsed % 365 == 0 and seconds_elapsed is not 0:
+                current_tamagotchi.update()
+            if seconds_elapsed % 365 == 0:
                 animation.play_birthday()
             else:
                 animation.play_idle()
+
+        elif event.type==pygame.USEREVENT+2:
             grid = animation.play_animation()
 
 
@@ -296,7 +302,7 @@ while not done:
     if show_debug:
         debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
         "One day = " + str(game_speed) + " ms" ], 10, 10, 20)
-    
+
     
     # Draw the grid
     for row in range(32):
