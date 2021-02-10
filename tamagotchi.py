@@ -5,6 +5,9 @@ class Tamagotchi:
         self.energy = 100
         self.birthday = birthday
         self.age = 0
+
+        self.hunger_state = True
+        self.energy_state = False
     
     def update(self):
         self._energy(-3)
