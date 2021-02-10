@@ -1,7 +1,6 @@
 import pygame
 import math
 import os
-from tamagotchi import *
 
 
 # Path to users asset folder
