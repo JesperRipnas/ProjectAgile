@@ -5,7 +5,8 @@ from tamagotchi import *
 import winsound
 from animation import Animation
 
-def knapp(circlecenter):
+
+def button(circlecenter):
     x1, y1 = pygame.mouse.get_pos()
     x2, y2 = circlecenter
     distance = math.hypot(x1 - x2, y1 - y2)
@@ -14,7 +15,7 @@ def knapp(circlecenter):
 def background(path):
     screen.fill(GRAY)
     backgroundPic = pygame.image.load(path)
-    backgroundPic = pygame.transform.scale(backgroundPic, (580, 745)) ###### FIXA!
+    backgroundPic = pygame.transform.scale(backgroundPic, (580, 745))
     printPic = backgroundPic.get_rect()
     screen.blit(backgroundPic, printPic)
     
@@ -25,6 +26,14 @@ def debug(debug_var_list, x ,y, fontsize):
     for i, line in enumerate(debug_var_list):
         screen.blit(debug_font.render(line,1, (0,0,0)), (x, y + (i * 20)))
 
+def timepassed():
+    font = pygame.font.SysFont('timesnewroman', 15)
+    hunger_value_text = font.render('D: '+str(seconds_elapsed), True, (0,0,0), None) 
+    screen.blit(hunger_value_text, (235, 230))
+
+    hunger_value_text = font.render('Y: '+str(current_tamagotchi.age), True, (0,0,0), None) 
+    screen.blit(hunger_value_text, (305, 230))
+
 def food():
     if current_tamagotchi.hunger_state == True:
         hunger_icon = pygame.image.load(assetpath + 'foodselect.png')
@@ -32,7 +41,7 @@ def food():
         hunger_icon = pygame.image.load(assetpath + 'foodfade.png')
 
     font = pygame.font.SysFont('timesnewroman', 15)
-    hunger_value_text = font.render('Hunger: ' + str(current_tamagotchi.hunger), True, (0,0,0), None) 
+    hunger_value_text = font.render(str(current_tamagotchi.hunger), True, (0,0,0), None) 
     screen.blit(hunger_value_text, (195, 230))
 
     hunger_icon = pygame.transform.scale(hunger_icon, (20, 20))
@@ -45,26 +54,19 @@ def sleep():
         energy_icon = pygame.image.load(assetpath + 'bedfade.png')
 
     font = pygame.font.SysFont('timesnewroman', 15)
-    energy_value_text = font.render('Energy: ' + str(current_tamagotchi.energy), True, (0,0,0), None)
-    screen.blit(energy_value_text, (305,230))
+    energy_value_text = font.render(' '+str(current_tamagotchi.energy), True, (0,0,0), None)
+    screen.blit(energy_value_text, (385,230))
 
     energy_icon = pygame.transform.scale(energy_icon, (20, 20))
-    screen.blit(energy_icon, (280, 230))
+    screen.blit(energy_icon, (365, 230))
 
-def knappA():
-    if current_tamagotchi.hunger_state== True:
-        current_tamagotchi.hunger_state= False
-    elif current_tamagotchi.hunger_state == False:
-        current_tamagotchi.hunger_state= True
-    
-    if current_tamagotchi.energy_state == True:
-        current_tamagotchi.energy_state = False
-    elif current_tamagotchi.energy_state == False:
-        current_tamagotchi.energy_state = True
+def buttonA():
+    current_tamagotchi.hunger_state = not current_tamagotchi.hunger_state
+    current_tamagotchi.energy_state = not current_tamagotchi.energy_state
 
     frequency = 2500  # Set Frequency To 2500 Hertz
     duration = 25  # Set Duration To 1000 ms == 1 second
-    winsound.Beep(frequency, duration)
+    winsound.Beep(frequency, duration) # Change sound!
 
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
@@ -142,11 +144,11 @@ while not done:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
 
-            if knapp((180, 590)) <= 25:    # Knapp A
-                knappA()
-            if knapp((290, 625)) <= 25:    # Knapp B
+            if button((180, 590)) <= 25:    # Button A
+                buttonA()
+            if button((290, 625)) <= 25:    # Button B
                 print("B knapp tryckt")
-            if knapp((390, 590)) <= 25:    # Knapp C
+            if button((390, 590)) <= 25:    # Button C
                 print("C knapp tryckt")
 
             # User clicks the mouse. Get the position
@@ -211,7 +213,8 @@ while not done:
             grid = animation.play_animation()
 
     # Set the screen background
-    background(assetpath + 'test.png')
+
+    background(assetpath + 'background.png')
     if show_debug:
         debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
         "One day = " + str(game_speed) + " ms" ], 10, 10, 20)
@@ -229,6 +232,7 @@ while not done:
                               HEIGHT])
     food()
     sleep()
+    timepassed()
 
     # Limit to 60 frames per second
     clock.tick(60)
