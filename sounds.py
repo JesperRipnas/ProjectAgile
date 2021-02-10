@@ -1,18 +1,21 @@
 import pygame
 import math
 import os
+from tamagotchi import *
+
 
 # Path to users asset folder
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
 
 # Init mixer
-pygame.mixer.init(frequency = 44100, size = -16, channels = 1, buffer = 2**12)
+pygame.mixer.init(frequency = 44100, size = -16, channels = 2, buffer = 2**12)
 
 
 # Seperate channels
 channel_1 = pygame.mixer.Channel(0)
 channel_2 = pygame.mixer.Channel(1)
+channel_3 = pygame.mixer.Channel(2)
 
 
 # Background music
@@ -26,3 +29,10 @@ def buttonpress():
     sound = pygame.mixer.Sound(assetpath + 'buttonpress.mp3')
     channel_2.play(sound, loops = 0)
     channel_2.set_volume(1)
+
+
+# Play warning sounds if hunger gets to low
+def warningsound():
+    sound = pygame.mixer.Sound(assetpath + 'alarm.mp3')
+    channel_3.play(sound, loops = 0)
+    channel_3.set_volume(1)
