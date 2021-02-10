@@ -3,6 +3,8 @@ import math
 import os
 from tamagotchi import * 
 import winsound
+from animation import Animation
+
 
 def knapp(circlecenter):
     x1, y1 = pygame.mouse.get_pos()
@@ -124,6 +126,9 @@ pygame.time.set_timer(pygame.USEREVENT+1,100)
 
 current_tamagotchi = Tamagotchi("Dude",19911014)
 
+# Animtaion and timer to controll the speed
+animation = Animation()
+pygame.time.set_timer(pygame.USEREVENT+2,500)
 
 # -------- Main Program Loop -----------
 while not done:
@@ -172,9 +177,13 @@ while not done:
             #print(seconds_elapsed)#####################################################################################
             current_tamagotchi.update()
             if seconds_elapsed % 365 == 0:
+                animation.play_birthday()
                 current_tamagotchi.age += 1
                 print("Happy bday")
-
+            else:
+                animation.play_idle()
+        elif event.type==pygame.USEREVENT+2:
+            grid = animation.play_animation()
     # Set the screen background
     background(assetpath + 'test.png')
     debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy) ], 10, 10, 20)
