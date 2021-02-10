@@ -73,6 +73,10 @@ def buttonA():
 
 
 def buttonB():
+    if current_tamagotchi.hunger_state:
+        current_tamagotchi._eat()
+    elif current_tamagotchi.energy_state:
+        current_tamagotchi._sleep()
     buttonpress()
 
 
