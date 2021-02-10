@@ -26,7 +26,7 @@ class Animation:
             self.idle = True
             self.birthday = self.sleep = self.eat = self.dying = False
             self.counter = 0
-        self.current_animation = self._getidle()
+            self.current_animation = self._getidle()
 
 
     def play_birthday(self):
@@ -34,7 +34,7 @@ class Animation:
             self.birthday = True
             self.idle = self.sleep = self.eat = self.dying = False
             self.counter = 0
-        self.current_animation = self._getbirthday()
+            self.current_animation = self._getbirthday()
 
 
     def play_sleep(self):
@@ -42,7 +42,7 @@ class Animation:
             self.sleep = True
             self.birthday = self.idle = self.eat = self.dying = False
             self.counter = 0
-        self.current_animation = self._getsleep()
+            self.current_animation = self._getsleep()
 
 
     def play_eat(self):
@@ -50,7 +50,7 @@ class Animation:
             self.eat = True
             self.birthday = self.sleep = self.idle = self.dying = False
             self.counter = 0
-        self.current_animation = self._geteat()
+            self.current_animation = self._geteat()
 
 
     def play_dying(self):
@@ -58,7 +58,7 @@ class Animation:
             self.dying = True
             self.birthday = self.sleep = self.eat = self.idle = False
             self.counter = 0
-        self.current_animation = self._getdying()
+            self.current_animation = self._getdying()
 
 
     def _getidle(self):
