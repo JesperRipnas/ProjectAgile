@@ -10,6 +10,7 @@ class Tamagotchi:
         self.loan = 0
         self.exercise = 0
         self.drunk = 0
+        self.dead = False
 
         self.hunger_state = True
         self.energy_state = False
@@ -49,5 +50,6 @@ class Tamagotchi:
 
 
     def gameover(self):
+        self.dead = True
         print('Game over')
 
