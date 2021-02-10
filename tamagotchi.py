@@ -5,10 +5,17 @@ class Tamagotchi:
         self.energy = 100
         self.birthday = birthday
         self.age = 0
+        self.cash = 0
+        self.happiness = 0
+        self.loan = 0
+        self.exercise = 0
+        self.drunk = 0
 
         self.hunger_state = True
         self.energy_state = False
-    
+        self.popup_state = False
+
+
     def update(self):
         self._energy(-3)
         self._hunger(-1)

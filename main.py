@@ -2,8 +2,8 @@ import pygame
 import math
 import os
 from tamagotchi import * 
-import winsound
 from animation import Animation
+from sounds import *
 
 
 def button(circlecenter):
@@ -12,19 +12,22 @@ def button(circlecenter):
     distance = math.hypot(x1 - x2, y1 - y2)
     return distance
 
+
 def background(path):
     screen.fill(GRAY)
     backgroundPic = pygame.image.load(path)
     backgroundPic = pygame.transform.scale(backgroundPic, (580, 745))
     printPic = backgroundPic.get_rect()
     screen.blit(backgroundPic, printPic)
-    
+
+
 def debug(debug_var_list, x ,y, fontsize):
     debug_font = pygame.font.Font(None, fontsize)
     
     debug_pos = [x,y]
     for i, line in enumerate(debug_var_list):
         screen.blit(debug_font.render(line,1, (0,0,0)), (x, y + (i * 20)))
+
 
 def timepassed():
     font = pygame.font.SysFont('timesnewroman', 15)
@@ -33,6 +36,7 @@ def timepassed():
 
     hunger_value_text = font.render('Y: '+str(current_tamagotchi.age), True, (0,0,0), None) 
     screen.blit(hunger_value_text, (305, 230))
+
 
 def food():
     if current_tamagotchi.hunger_state == True:
@@ -47,6 +51,7 @@ def food():
     hunger_icon = pygame.transform.scale(hunger_icon, (20, 20))
     screen.blit(hunger_icon, (170, 230))
 
+
 def sleep():
     if current_tamagotchi.energy_state == True:
         energy_icon = pygame.image.load(assetpath + 'bedselect.png')
@@ -60,13 +65,49 @@ def sleep():
     energy_icon = pygame.transform.scale(energy_icon, (20, 20))
     screen.blit(energy_icon, (365, 230))
 
+
 def buttonA():
     current_tamagotchi.hunger_state = not current_tamagotchi.hunger_state
     current_tamagotchi.energy_state = not current_tamagotchi.energy_state
+    buttonpress()
 
-    frequency = 2500  # Set Frequency To 2500 Hertz
-    duration = 25  # Set Duration To 1000 ms == 1 second
-    winsound.Beep(frequency, duration) # Change sound!
+
+def buttonB():
+    if current_tamagotchi.hunger_state:
+        current_tamagotchi._eat()
+    elif current_tamagotchi.energy_state:
+        current_tamagotchi._sleep()
+    buttonpress()
+
+
+def buttonC():
+    current_tamagotchi.popup_state = not current_tamagotchi.popup_state
+    buttonpress()
+
+
+def popup():
+    popupbg = pygame.image.load(assetpath + 'popupbg.png')
+    popupbg = pygame.transform.scale(popupbg, (127, 150))
+    font = pygame.font.SysFont('timesnewroman', 13)
+    popuptext_name = font.render('Name: '+str(current_tamagotchi.name), True, (0,0,0), None)
+    popuptext_birthday = font.render('Birthday: '+str(current_tamagotchi.birthday), True, (0,0,0), None)
+    popuptext_cash = font.render('Cash: $'+str(current_tamagotchi.cash), True, (0,0,0), None)
+    popuptext_loan = font.render('Loan: $'+str(current_tamagotchi.loan), True, (0,0,0), None)
+    popuptext_happiness = font.render('Happiness: '+str(current_tamagotchi.happiness), True, (0,0,0), None)
+    popuptext_exercise = font.render('Workout: '+str(current_tamagotchi.exercise), True, (0,0,0), None)
+    popuptext_drunk = font.render('Drunk: '+str(current_tamagotchi.drunk), True, (0,0,0), None)
+    if current_tamagotchi.popup_state == False:
+        popupbg = pygame.image.load(assetpath + 'popupbgtrans.png')
+    elif current_tamagotchi.popup_state == True:
+        screen.blit(popupbg, (290,252))
+        screen.blit(popuptext_name, (295,260))
+        screen.blit(popuptext_birthday, (296,280))
+        screen.blit(popuptext_cash, (296,300))
+        screen.blit(popuptext_loan, (296,320))
+        screen.blit(popuptext_happiness, (296,340))
+        screen.blit(popuptext_exercise, (296,360))
+        screen.blit(popuptext_drunk, (296,380))
+
 
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
@@ -76,23 +117,28 @@ WHITE = (255, 255, 255)
 GRAY = (127, 127, 127)
 LGRAY = (157, 157, 157)
 
+
 # Mouse buttons
 LEFT = 1
 RIGHT = 3
+
 
 # Width & Height of each cell
 WIDTH = 6
 HEIGHT = 6
 
+
 # Margin between cells
 MARGIN = 2
 
-#
+# Window Margin
 WINDOWMARGINX = 160
 WINDOWMARGINY = 250
 
 seconds_elapsed = 0
 show_debug = False
+
+
 # Create a 2 dimensional array.
 grid = []
 for row in range(32):
@@ -100,34 +146,32 @@ for row in range(32):
     for column in range(32):
         grid[row].append(0)
 
-# Set specific row/column to 1 (pixel on)
-# grid[X][X] = 1
 
 # Initialize pygame
 pygame.init()
+
 
 # Set the HEIGHT and WIDTH of the screen
 WINDOW_SIZE = width, height = 580, 740
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
+
 # Set title of screen
 pygame.display.set_caption("Tamagotchi")
 
-# Background music
-pygame.mixer.music.load(assetpath + 'backgroundsong.mp3')
-pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.1)
 
 # Loop until the user clicks the close button.
 done = False
-
-
 game_speed = 1000
 paused = False
+
+
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 pygame.time.set_timer(pygame.USEREVENT+1,game_speed)
 
+
+# Default Object character
 current_tamagotchi = Tamagotchi("Dude",19911014)
 
 
@@ -147,9 +191,9 @@ while not done:
             if button((180, 590)) <= 25:    # Button A
                 buttonA()
             if button((290, 625)) <= 25:    # Button B
-                print("B knapp tryckt")
+                buttonB()
             if button((390, 590)) <= 25:    # Button C
-                print("C knapp tryckt")
+                buttonC()
 
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -179,6 +223,12 @@ while not done:
                 except:
                     pass
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                buttonA()
+            if event.key == pygame.K_2:
+                buttonB()
+            if event.key == pygame.K_3:
+                buttonC()
             if event.key == pygame.K_d:
                 show_debug = not show_debug
             if event.key == pygame.K_l:
@@ -212,12 +262,16 @@ while not done:
         elif event.type==pygame.USEREVENT+2:
             grid = animation.play_animation()
 
-    # Set the screen background
 
+    # Set the screen background
     background(assetpath + 'background.png')
+
+
     if show_debug:
         debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
         "One day = " + str(game_speed) + " ms" ], 10, 10, 20)
+    
+    
     # Draw the grid
     for row in range(32):
         for column in range(32):
@@ -233,12 +287,16 @@ while not done:
     food()
     sleep()
     timepassed()
+    popup()
+
 
     # Limit to 60 frames per second
     clock.tick(60)
 
+
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
+
 
 # Needs to be the last line in the code, or it will hang on close/quit
 pygame.quit()
