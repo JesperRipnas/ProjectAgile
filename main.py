@@ -248,7 +248,7 @@ def display_main_menu():
     screen.blit(screen, (0,0))
 
 def display_credits():
-    background('tama.jpg')
+    background(assetpath+'tama.jpg')
     draw_text("Jesper", 45, mid_w, mid_h - 60)
     draw_text("Emil", 45, mid_w, mid_h - 30)
     draw_text("Denijad", 45, mid_w, mid_h)
@@ -257,6 +257,10 @@ def display_credits():
     draw_text("Haydar", 45, mid_w, mid_h  + 90)
     screen.blit(screen, (0,0))
 
+
+def creat_character(name, date):
+    global current_tamagotchi
+    current_tamagotchi = Tamagotchi(name, date)
 
 #---------------------------------------
 
@@ -277,6 +281,18 @@ sleeping_animation = False
 animation_itteration = 0
 
 menus = True
+
+#Character creation
+font = pygame.font.Font(None, 32)
+clock = pygame.time.Clock()
+name_input_box = pygame.Rect(640/2, 180-16, 140, 32)
+date_input_box = pygame.Rect(640/2, 280-16, 140, 32)
+name_text = ''
+date_text = ''
+date_num = 0
+name = True
+date = False
+charactercreation = False
 
 # -------- Main Program Loop -----------
 while not done:
@@ -314,7 +330,63 @@ while not done:
         elif menu_state == "Credits":
             display_credits()
         clock.tick(60)
-        pygame.display.flip()   
+        pygame.display.flip()
+
+    while not charactercreation:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                charactercreation = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if name:
+                        name = False
+                        date = True
+                    elif date and len(date_text) == 6:
+                        try:
+                            date_num = int(date_text)
+                            charactercreation = True
+                            creat_character(name_text, date_num)
+                        except:
+                            pass
+                elif event.key == pygame.K_BACKSPACE:
+                    if name:
+                        name_text = name_text[:-1]
+                    if date:
+                        date_text = date_text[:-1]
+                elif len(name_text) < 10 and name:
+                    if name:
+                        name_text += event.unicode
+                elif len(date_text) < 6 and date:
+                    if date:
+                        date_text += event.unicode
+        
+        background(assetpath + 'tama.jpg')
+        # Render the current text.
+        nametxt_surface = font.render(name_text, True, pygame.Color('white'))
+        datetxt_surface = font.render(date_text, True, pygame.Color('white'))
+        # Resize the box if the text is too long.
+        width = nametxt_surface.get_width()
+        name_input_box.w = width
+        
+        name_width = nametxt_surface.get_width()
+        date_width = datetxt_surface.get_width()
+        
+        # Blit the name text.
+        name_input_box.x = (screen.get_width()/2)-name_width/2
+        date_input_box.x = (screen.get_width()/2)-date_width/2
+        screen.blit(nametxt_surface, (name_input_box.x+5, name_input_box.y+5))
+        staticnametext = font.render('Input charter name:', True, pygame.Color('white'))
+        screen.blit(staticnametext, (((screen.get_width())-(11*len('Input charter name:')))/2, 140-16))
+        # Blit the date text.
+        screen.blit(datetxt_surface, (date_input_box.x+5, date_input_box.y+5))
+        staticnametext = font.render('Input charter birthdate (xxxxxx):', True, pygame.Color('white'))
+        screen.blit(staticnametext, (((screen.get_width())-(10*len('Input charter birthdate (xxxxxx):')))/2, 240-16))
+        
+
+        pygame.display.flip()
+        clock.tick(30)
+    
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
@@ -385,7 +457,6 @@ while not done:
                     paused = not paused
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
-
             if not current_tamagotchi.dead:
                 current_tamagotchi.update()
                 if seconds_elapsed % 365 == 0:
