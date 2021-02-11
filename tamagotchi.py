@@ -11,6 +11,7 @@ class Tamagotchi:
         self.exercise = 0
         self.drunk = 0
         self.dead = False
+        self.asleep = False
 
         self.hunger_state = True
         self.energy_state = False
@@ -18,8 +19,8 @@ class Tamagotchi:
 
 
     def update(self):
-        self._energy(-3)
-        self._hunger(-1)
+        self._energy(-1)
+        self._hunger(-3)
 
 
     def _hunger(self, change = -3):
@@ -46,7 +47,8 @@ class Tamagotchi:
 
 
     def _sleep(self):
-            self.energy = 100
+        self.asleep = True
+        self.energy = 100
 
 
     def gameover(self):

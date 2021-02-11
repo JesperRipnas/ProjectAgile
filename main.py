@@ -78,11 +78,9 @@ def buttonB():
     if current_tamagotchi.hunger_state:
         global eating_animation
         eating_animation = True
-        current_tamagotchi._eat()
     elif current_tamagotchi.energy_state:
         global sleeping_animation
         sleeping_animation = True
-        current_tamagotchi._sleep()
     buttonpress()
 
 
@@ -272,6 +270,9 @@ while not done:
 
         #Animation timer cycle
         elif event.type==pygame.USEREVENT+2:
+            if current_tamagotchi.asleep:
+                sleeping_animation = True
+                current_tamagotchi.asleep = False
             if current_tamagotchi.dead:
                 animation.play_dying()
             elif eating_animation:
@@ -280,12 +281,15 @@ while not done:
                 if animation_itteration >= 4:
                     eating_animation = False
                     animation_itteration = 0
+                    current_tamagotchi._eat()
             elif sleeping_animation:
                 animation_itteration += 1
                 animation.play_sleep()
                 if animation_itteration >= 8:
                     sleeping_animation = False
                     animation_itteration = 0
+                    current_tamagotchi._sleep()
+                    current_tamagotchi.asleep = False
             elif seconds_elapsed % 365 == 0 and seconds_elapsed != 0:
                 animation.play_birthday()
             else:
