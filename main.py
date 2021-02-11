@@ -215,7 +215,7 @@ pygame.display.set_caption("Tamagotchi")
 
 # Loop until the user clicks the close button.
 done = False
-game_speed = 1000
+game_speed = 2000
 paused = False
 testloop = False
 notificationloop = False
@@ -471,8 +471,11 @@ while not done:
                     current_tamagotchi.cash += 100
                     current_tamagotchi.popup_cash_state = True
                 if seconds_elapsed % 34 == 0:
-                    current_tamagotchi.cash -= 40
-                    current_tamagotchi.popup_rent_state = True
+                    if current_tamagotchi.cash < current_tamagotchi.rent:
+                        current_tamagotchi.dead = True
+                    else:
+                        current_tamagotchi.cash -= 40
+                        current_tamagotchi.popup_rent_state = True
             if current_tamagotchi.hunger < 20:
                 sound_alarm()
 
@@ -519,7 +522,7 @@ while not done:
 
     if show_debug:
         debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
-        "One day = " + str(game_speed) + " ms","FPS: " + str(int(clock.get_fps())) ], 10, 10, 20)
+        "One day = " + str(game_speed) + " ms","FPS: " + str(int(clock.get_fps())),"Ticks: " + str(int(pygame.time.get_ticks()))], 10, 10, 20)
 
     
     # Draw the grid
