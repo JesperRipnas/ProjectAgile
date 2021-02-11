@@ -65,6 +65,7 @@ def sleep():
     energy_icon = pygame.transform.scale(energy_icon, (20, 20))
     screen.blit(energy_icon, (365, 230))
 
+
 def warning():
     global testloop
     font = pygame.font.SysFont('timesnewroman', 15)
@@ -81,6 +82,7 @@ def warning():
             pygame.time.set_timer(pygame.USEREVENT+3,5000,1)
             testloop = True
 
+
 def use_eat():
     global animation_itteration 
     animation_itteration = 0
@@ -89,28 +91,31 @@ def use_eat():
             current_tamagotchi.cash -= 10
             global eating_animation
             eating_animation = True
-            current_tamagotchi.buy = True            
+            current_tamagotchi.buy = True
+            sound_eating()        
         else:
             current_tamagotchi.warning = True
+            sound_warning()
+
 
 def buttonA():
-
     current_tamagotchi.hunger_state = not current_tamagotchi.hunger_state
     current_tamagotchi.energy_state = not current_tamagotchi.energy_state
-    buttonpress()
+    sound_buttonpress()
+
 
 def buttonB():
+    sound_buttonpress()
     use_eat()
     if current_tamagotchi.energy_state:
         global sleeping_animation
         sleeping_animation = True
-    buttonpress()
+        sound_sleeping()
 
 
 def buttonC():
     current_tamagotchi.popup_state = not current_tamagotchi.popup_state
-    buttonpress()
-    current_tamagotchi.cash += 20
+    sound_buttonpress()
 
 
 def popup():
@@ -291,7 +296,7 @@ while not done:
                     current_tamagotchi.age += 1
                     print("Happy bday")
             if current_tamagotchi.hunger < 20:
-                warningsound()
+                sound_alarm()
 
         #Animation timer cycle
         elif event.type==pygame.USEREVENT+2:

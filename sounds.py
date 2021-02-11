@@ -24,14 +24,34 @@ channel_1.set_volume(0.5)
 
 
 # Button press sound
-def buttonpress():
+def sound_buttonpress():
     sound = pygame.mixer.Sound(assetpath + 'buttonpress.mp3')
     channel_2.play(sound, loops = 0)
     channel_2.set_volume(1)
 
 
 # Play warning sounds if hunger gets to low
-def warningsound():
+def sound_alarm():
     sound = pygame.mixer.Sound(assetpath + 'alarm.mp3')
+    channel_3.play(sound, loops = 0)
+    channel_3.set_volume(1)
+
+
+# Play warning sounds if hunger gets to low
+def sound_warning():
+    sound = pygame.mixer.Sound(assetpath + 'warning_eating.wav')
+    channel_3.play(sound, loops = 0)
+    channel_3.set_volume(1)
+
+
+# Eating sound
+def sound_eating():
+    sound = pygame.mixer.Sound(assetpath + 'eating.wav')
+    channel_3.play(sound, loops = 0)
+    channel_3.set_volume(1)
+
+# Sleeping sound
+def sound_sleeping():
+    sound = pygame.mixer.Sound(assetpath + 'snoring.wav')
     channel_3.play(sound, loops = 0)
     channel_3.set_volume(1)
