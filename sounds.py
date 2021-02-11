@@ -8,13 +8,14 @@ assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
 
 # Init mixer
-pygame.mixer.init(frequency = 44100, size = -16, channels = 2, buffer = 2**12)
+pygame.mixer.init(frequency = 44100, size = -16, channels = 3, buffer = 2**12)
 
 
 # Seperate channels
 channel_1 = pygame.mixer.Channel(0)
 channel_2 = pygame.mixer.Channel(1)
 channel_3 = pygame.mixer.Channel(2)
+channel_4 = pygame.mixer.Channel(3)
 
 
 # Background music
@@ -47,11 +48,11 @@ def sound_warning():
 # Eating sound
 def sound_eating():
     sound = pygame.mixer.Sound(assetpath + 'eating.wav')
-    channel_3.play(sound, loops = 0)
-    channel_3.set_volume(1)
+    channel_4.play(sound, loops = 0)
+    channel_4.set_volume(1)
 
 # Sleeping sound
 def sound_sleeping():
     sound = pygame.mixer.Sound(assetpath + 'snoring.wav')
-    channel_3.play(sound, loops = 0)
-    channel_3.set_volume(1)
+    channel_4.play(sound, loops = 0)
+    channel_4.set_volume(1)

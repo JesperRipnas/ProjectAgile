@@ -66,6 +66,17 @@ def sleep():
     screen.blit(energy_icon, (365, 230))
 
 
+def cashnotification():
+    global notificationloop
+    font = pygame.font.SysFont('timesnewroman', 23)
+    if current_tamagotchi.popup_cash_state:
+        cash_text = font.render('+$100', True, (0,0,0), None)
+        screen.blit(cash_text, (171,254))
+        if notificationloop == False:
+            pygame.time.set_timer(pygame.USEREVENT+4,3000,1)
+            notificationloop = True
+
+
 def warning():
     global testloop
     font = pygame.font.SysFont('timesnewroman', 15)
@@ -141,7 +152,10 @@ def popup():
         screen.blit(popuptext_exercise, (296,360))
         screen.blit(popuptext_drunk, (296,380))
 
+
+# Local path to assets folder for user
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
+
 
 # Colors
 BLACK = (0, 0, 0)
@@ -162,6 +176,7 @@ HEIGHT = 6
 
 # Margin between cells
 MARGIN = 2
+
 
 # Window Margin
 WINDOWMARGINX = 160
@@ -197,6 +212,8 @@ done = False
 game_speed = 1000
 paused = False
 testloop = False
+notificationloop = False
+
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -213,7 +230,6 @@ pygame.time.set_timer(pygame.USEREVENT+2,500)
 eating_animation = False
 sleeping_animation = False
 animation_itteration = 0
-
 
 
 # -------- Main Program Loop -----------
@@ -258,6 +274,7 @@ while not done:
                     print("Click ", pos, "Grid coordinates: ", row, column)
                 except:
                     pass
+        #KEY TRIGGERS
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:
                 buttonA()
@@ -288,13 +305,13 @@ while not done:
         elif event.type==pygame.USEREVENT+1:
             seconds_elapsed += 1
 
-            #print(seconds_elapsed)#####################################################################################
-            
             if not current_tamagotchi.dead:
                 current_tamagotchi.update()
                 if seconds_elapsed % 365 == 0:
                     current_tamagotchi.age += 1
-                    print("Happy bday")
+                if seconds_elapsed % 30 == 0:
+                    current_tamagotchi.cash += 100
+                    current_tamagotchi.popup_cash_state = True
             if current_tamagotchi.hunger < 20:
                 sound_alarm()
 
@@ -329,6 +346,9 @@ while not done:
             current_tamagotchi.warning = False
             current_tamagotchi.buy = False
             testloop = False
+        elif event.type == pygame.USEREVENT+4:
+            current_tamagotchi.popup_cash_state = False
+            notificationloop = False
 
 
     # Set the screen background
@@ -352,10 +372,14 @@ while not done:
                               (MARGIN + HEIGHT) * row + MARGIN + WINDOWMARGINY,
                               WIDTH,
                               HEIGHT])
+
+
+    # Call for functions
     food()
     sleep()
     timepassed()
     popup()
+    cashnotification()
     warning()
 
 
