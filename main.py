@@ -32,10 +32,10 @@ def debug(debug_var_list, x ,y, fontsize):
 def timepassed():
     font = pygame.font.SysFont('timesnewroman', 15)
     hunger_value_text = font.render('D: '+str(seconds_elapsed), True, (0,0,0), None) 
-    screen.blit(hunger_value_text, (235, 230))
+    screen.blit(hunger_value_text, (250, 230))
 
     hunger_value_text = font.render('Y: '+str(current_tamagotchi.age), True, (0,0,0), None) 
-    screen.blit(hunger_value_text, (305, 230))
+    screen.blit(hunger_value_text, (310, 230))
 
 
 def food():
@@ -65,30 +65,52 @@ def sleep():
     energy_icon = pygame.transform.scale(energy_icon, (20, 20))
     screen.blit(energy_icon, (365, 230))
 
+def warning():
+    global testloop
+    font = pygame.font.SysFont('timesnewroman', 15)
+    if current_tamagotchi.warning:
+        warning_text = font.render("(!)", True, (0,0,0), None)
+        screen.blit(warning_text, (220, 230))
+        if testloop == False:
+            pygame.time.set_timer(pygame.USEREVENT+3,5000,1)
+            testloop = True
+    elif current_tamagotchi.buy:
+        warning_text = font.render("-$10", True, (0,0,0), None)
+        screen.blit(warning_text, (220, 230))
+        if testloop == False:
+            pygame.time.set_timer(pygame.USEREVENT+3,5000,1)
+            testloop = True
+
+def use_eat():
+    global animation_itteration 
+    animation_itteration = 0
+    if current_tamagotchi.hunger_state:
+        if current_tamagotchi.cash >= 10: 
+            current_tamagotchi.cash -= 10
+            global eating_animation
+            eating_animation = True
+            current_tamagotchi.buy = True            
+        else:
+            current_tamagotchi.warning = True
 
 def buttonA():
+
     current_tamagotchi.hunger_state = not current_tamagotchi.hunger_state
     current_tamagotchi.energy_state = not current_tamagotchi.energy_state
     buttonpress()
 
-
 def buttonB():
-    global animation_itteration 
-    animation_itteration = 0
-    if current_tamagotchi.hunger_state:
-        global eating_animation
-        eating_animation = True
-        current_tamagotchi._eat()
-    elif current_tamagotchi.energy_state:
+    use_eat()
+    if current_tamagotchi.energy_state:
         global sleeping_animation
         sleeping_animation = True
-        current_tamagotchi._sleep()
     buttonpress()
 
 
 def buttonC():
     current_tamagotchi.popup_state = not current_tamagotchi.popup_state
     buttonpress()
+    current_tamagotchi.cash += 20
 
 
 def popup():
@@ -169,7 +191,7 @@ pygame.display.set_caption("Tamagotchi")
 done = False
 game_speed = 1000
 paused = False
-
+testloop = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -186,6 +208,7 @@ pygame.time.set_timer(pygame.USEREVENT+2,500)
 eating_animation = False
 sleeping_animation = False
 animation_itteration = 0
+
 
 
 # -------- Main Program Loop -----------
@@ -274,23 +297,33 @@ while not done:
         elif event.type==pygame.USEREVENT+2:
             if current_tamagotchi.dead:
                 animation.play_dying()
+            elif current_tamagotchi.asleep:
+                sleeping_animation = True
+                current_tamagotchi.asleep = False
             elif eating_animation:
                 animation_itteration += 1
                 animation.play_eat()
                 if animation_itteration >= 4:
                     eating_animation = False
                     animation_itteration = 0
+                    current_tamagotchi._eat()
             elif sleeping_animation:
                 animation_itteration += 1
                 animation.play_sleep()
                 if animation_itteration >= 8:
                     sleeping_animation = False
                     animation_itteration = 0
+                    current_tamagotchi._sleep()
+                    current_tamagotchi.asleep = False
             elif seconds_elapsed % 365 == 0 and seconds_elapsed != 0:
                 animation.play_birthday()
             else:
                 animation.play_idle()
             grid = animation.play_animation()
+        elif event.type == pygame.USEREVENT+3:
+            current_tamagotchi.warning = False
+            current_tamagotchi.buy = False
+            testloop = False
 
 
     # Set the screen background
@@ -299,7 +332,7 @@ while not done:
 
     if show_debug:
         debug(["Day: " + str(seconds_elapsed), "Year: " + str(current_tamagotchi.age),"Hunger: " + str(current_tamagotchi.hunger), "Energy: " + str(current_tamagotchi.energy),
-        "One day = " + str(game_speed) + " ms" ], 10, 10, 20)
+        "One day = " + str(game_speed) + " ms","FPS: " + str(int(clock.get_fps())) ], 10, 10, 20)
 
     
     # Draw the grid
@@ -318,6 +351,7 @@ while not done:
     sleep()
     timepassed()
     popup()
+    warning()
 
 
     # Limit to 60 frames per second
