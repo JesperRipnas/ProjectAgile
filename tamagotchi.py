@@ -49,11 +49,11 @@ class Tamagotchi:
             self.energy = 100
         else:
             print('Sleeping')
+            sound_sleeping()
             self._sleep()
 
 
     def _sleep(self):
-        sound_sleeping()
         self.energy = 100
         self.asleep = True
 
