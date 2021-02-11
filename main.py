@@ -75,6 +75,12 @@ def cashnotification():
         if notificationloop == False:
             pygame.time.set_timer(pygame.USEREVENT+4,3000,1)
             notificationloop = True
+    if current_tamagotchi.popup_rent_state:
+        cash_text = font.render('-$40 Rent', True, (0,0,0), None)
+        screen.blit(cash_text, (171,254))
+        if notificationloop == False:
+            pygame.time.set_timer(pygame.USEREVENT+4,3000,1)
+            notificationloop = True
 
 
 def warning():
@@ -464,6 +470,9 @@ while not done:
                 if seconds_elapsed % 30 == 0:
                     current_tamagotchi.cash += 100
                     current_tamagotchi.popup_cash_state = True
+                if seconds_elapsed % 34 == 0:
+                    current_tamagotchi.cash -= 40
+                    current_tamagotchi.popup_rent_state = True
             if current_tamagotchi.hunger < 20:
                 sound_alarm()
 
@@ -500,6 +509,7 @@ while not done:
             testloop = False
         elif event.type == pygame.USEREVENT+4:
             current_tamagotchi.popup_cash_state = False
+            current_tamagotchi.popup_rent_state = False
             notificationloop = False
 
 

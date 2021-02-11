@@ -12,6 +12,7 @@ class Tamagotchi:
         self.loan = 0
         self.exercise = 0
         self.drunk = 0
+        self.rent = 40
         self.dead = False
         self.warning = False
         self.asleep = False
@@ -21,6 +22,7 @@ class Tamagotchi:
         self.energy_state = False
         self.popup_state = False
         self.popup_cash_state = False
+        self.popup_rent_state = False
         
 
 
