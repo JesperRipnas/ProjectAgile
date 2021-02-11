@@ -197,6 +197,51 @@ done = False
 game_speed = 1000
 paused = False
 testloop = False
+# Menu vars
+mid_w, mid_h = width / 2, (height / 2) - 50
+cursor_rect = pygame.Rect(0, 0, 20, 20)
+offset = - 185
+cursor_state = "Start"
+menu_state = "Main"
+startx, starty = mid_w , mid_h + 30
+optionsx, optionsy = mid_w, mid_h + 70
+creditsx, creditsy = mid_w, mid_h + 110
+
+cursor_rect.midtop = (startx + offset, starty)
+
+#--------------------------------------
+# Menu funcs
+def draw_text(text, size, x, y ):
+    font = pygame.font.Font(None,size)
+    text_surface = font.render(text, True, WHITE)
+    text_rect = text_surface.get_rect()
+    text_rect.center = (x,y)
+    screen.blit(text_surface,text_rect)
+
+def draw_cursor():
+    draw_text('->', 65, cursor_rect.x, cursor_rect.y)
+
+def display_main_menu():
+    background(assetpath + 'tama.jpg')
+
+    draw_text("Start Game", 65, startx,starty)
+    draw_text("create player", 65, optionsx, optionsy)
+    draw_text("Credits", 65,creditsx,creditsy)
+    draw_cursor()
+    screen.blit(screen, (0,0))
+
+def display_credits():
+    background('tama.jpg')
+    draw_text("Jesper", 45, mid_w, mid_h - 60)
+    draw_text("Emil", 45, mid_w, mid_h - 30)
+    draw_text("Denijad", 45, mid_w, mid_h)
+    draw_text("Robert", 45, mid_w, mid_h  + 30)
+    draw_text("Alex", 45, mid_w, mid_h  + 60)
+    draw_text("Haydar", 45, mid_w, mid_h  + 90)
+    screen.blit(screen, (0,0))
+
+
+#---------------------------------------
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -214,10 +259,45 @@ eating_animation = False
 sleeping_animation = False
 animation_itteration = 0
 
-
+menus = True
 
 # -------- Main Program Loop -----------
 while not done:
+    while menus:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menus = False
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    #self.START_KEY = True
+                    if cursor_state == "Start":
+                        menus = False
+                    elif cursor_state == "Credits":
+                        menu_state = "Credits"
+                if event.key == pygame.K_BACKSPACE:
+                    if menu_state == "Credits":
+                        menu_state = "Main"
+                if event.key == pygame.K_DOWN:
+                    if cursor_state == "Start":
+                        cursor_rect.midtop = (optionsx + offset, optionsy)
+                        cursor_state = "Create_Player"
+                    elif cursor_state == "Create_Player":
+                        cursor_rect.midtop = (creditsx + offset, creditsy)
+                        cursor_state = "Credits"
+                if event.key == pygame.K_UP:
+                    if cursor_state == "Create_Player":
+                        cursor_rect.midtop = (startx + offset, starty)
+                        cursor_state = "Start"
+                    elif cursor_state == "Credits":
+                        cursor_rect.midtop = (optionsx + offset, optionsy)
+                        cursor_state = "Create_Player"
+        if menu_state == "Main":
+            display_main_menu()
+        elif menu_state == "Credits":
+            display_credits()
+        clock.tick(60)
+        pygame.display.flip()   
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
