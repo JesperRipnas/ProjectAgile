@@ -5,21 +5,25 @@ class Tamagotchi:
         self.energy = 100
         self.birthday = birthday
         self.age = 0
-        self.cash = 0
+        self.cash = 20
         self.happiness = 0
         self.loan = 0
         self.exercise = 0
         self.drunk = 0
         self.dead = False
+        self.warning = False
+        self.asleep = False
+        self.buy = False
 
         self.hunger_state = True
         self.energy_state = False
         self.popup_state = False
+        
 
 
     def update(self):
-        self._energy(-3)
-        self._hunger(-1)
+        self._energy(-1)
+        self._hunger(-3)
 
 
     def _hunger(self, change = -3):
@@ -46,8 +50,8 @@ class Tamagotchi:
 
 
     def _sleep(self):
-            self.energy = 100
-
+        self.energy = 100
+        self.asleep = True
 
     def gameover(self):
         self.dead = True
