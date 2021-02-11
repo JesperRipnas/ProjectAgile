@@ -1,3 +1,5 @@
+from sounds import *
+
 class Tamagotchi:
     def __init__(self, name, birthday):
         self.name = name
@@ -18,6 +20,7 @@ class Tamagotchi:
         self.hunger_state = True
         self.energy_state = False
         self.popup_state = False
+        self.popup_cash_state = False
         
 
 
@@ -50,6 +53,7 @@ class Tamagotchi:
 
 
     def _sleep(self):
+        sound_sleeping()
         self.energy = 100
         self.asleep = True
 
