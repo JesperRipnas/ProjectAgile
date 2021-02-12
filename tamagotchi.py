@@ -3,7 +3,7 @@ from sounds import *
 class Tamagotchi:
     def __init__(self, name, birthday):
         self.name = name
-        self.hunger = 100
+        self.hunger = 10
         self.energy = 100
         self.birthday = birthday
         self.age = 0
@@ -22,7 +22,6 @@ class Tamagotchi:
         self.popup_state = False
         self.popup_cash_state = False
         
-
 
     def update(self):
         self._energy(-1)
