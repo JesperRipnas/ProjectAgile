@@ -3,7 +3,7 @@ from sounds import *
 class Tamagotchi:
     def __init__(self, name, birthday):
         self.name = name
-        self.hunger = 10
+        self.hunger = 100
         self.energy = 100
         self.birthday = birthday
         self.age = 0
