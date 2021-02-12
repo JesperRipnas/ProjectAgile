@@ -23,7 +23,6 @@ class Tamagotchi:
         self.popup_cash_state = False
         
 
-
     def update(self):
         self._energy(-1)
         self._hunger(-3)

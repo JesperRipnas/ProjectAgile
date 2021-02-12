@@ -13,6 +13,55 @@ def button(circlecenter):
     return distance
 
 
+def deadscreen():
+    global paused
+    global seconds_elapsed
+    global menurect
+
+    gameoverpic = pygame.image.load(assetpath+'gameover.png')
+    gameoverpic = pygame.transform.scale(gameoverpic, (300, 120))
+    screen.blit(gameoverpic, (140,75))
+    pygame.draw.rect(screen, BLACK, (140,75, 300, 120),2)
+    pygame.draw.rect(screen, (BLACK), menurect,2)
+
+    total_days = seconds_elapsed
+
+    font = pygame.font.SysFont(assetpath + 'Alphakind.ttf', 30)
+    name_text = font.render(str(current_tamagotchi.name), True, (0,0,0), None)
+    text_display = name_text.get_rect()
+    text_display.center = (290,105)
+    screen.blit(name_text, text_display)
+
+    days_survived = font.render('survived for: '+ str(total_days)+' days', True, (0,0,0), None)
+    days_display = days_survived.get_rect()
+    days_display.center = (290,130)
+    screen.blit(days_survived, days_display)
+
+    font = pygame.font.SysFont(assetpath + 'Alphakind.ttf', 40)
+    main_menu_text = font.render('main menu', True, (0,0,0), None) 
+    screen.blit(main_menu_text, (220,152))
+
+    paused = True
+    pygame.mixer.pause()
+
+def reset():
+    global name
+    global date
+    global name_text
+    global date_text
+    global charactercreation
+    global menus
+    global seconds_elapsed
+    seconds_elapsed = 0
+    current_tamagotchi.dead = False
+    menus = True
+    charactercreation = False
+    name_text = ''
+    date_text = ''
+    name = True
+    date = False
+    pygame.mixer.unpause()
+
 def background(path):
     screen.fill(GRAY)
     backgroundPic = pygame.image.load(path)
@@ -156,6 +205,8 @@ def popup():
 # Local path to assets folder for user
 assetpath = os.path.dirname(os.path.abspath(__file__)) + '\\Assets\\'
 
+# Clickruta gameover
+menurect = pygame.Rect(210,150,175,30)
 
 # Colors
 BLACK = (0, 0, 0)
@@ -209,7 +260,7 @@ pygame.display.set_caption("Tamagotchi")
 
 # Loop until the user clicks the close button.
 done = False
-game_speed = 1000
+game_speed = 2000
 paused = False
 testloop = False
 notificationloop = False
@@ -242,7 +293,7 @@ def display_main_menu():
     background(assetpath + 'tama.jpg')
 
     draw_text("Start Game", 65, startx,starty)
-    draw_text("create player", 65, optionsx, optionsy)
+    #draw_text("create player", 65, optionsx, optionsy)
     draw_text("Credits", 65,creditsx,creditsy)
     draw_cursor()
     screen.blit(screen, (0,0))
@@ -313,18 +364,12 @@ while not done:
                         menu_state = "Main"
                 if event.key == pygame.K_DOWN:
                     if cursor_state == "Start":
-                        cursor_rect.midtop = (optionsx + offset, optionsy)
-                        cursor_state = "Create_Player"
-                    elif cursor_state == "Create_Player":
                         cursor_rect.midtop = (creditsx + offset, creditsy)
                         cursor_state = "Credits"
                 if event.key == pygame.K_UP:
-                    if cursor_state == "Create_Player":
+                    if cursor_state == "Credits":
                         cursor_rect.midtop = (startx + offset, starty)
                         cursor_state = "Start"
-                    elif cursor_state == "Credits":
-                        cursor_rect.midtop = (optionsx + offset, optionsy)
-                        cursor_state = "Create_Player"
         if menu_state == "Main":
             display_main_menu()
         elif menu_state == "Credits":
@@ -376,12 +421,12 @@ while not done:
         name_input_box.x = (screen.get_width()/2)-name_width/2
         date_input_box.x = (screen.get_width()/2)-date_width/2
         screen.blit(nametxt_surface, (name_input_box.x+5, name_input_box.y+5))
-        staticnametext = font.render('Input charter name:', True, pygame.Color('white'))
-        screen.blit(staticnametext, (((screen.get_width())-(11*len('Input charter name:')))/2, 140-16))
+        staticnametext = font.render('Name:', True, pygame.Color('white'))
+        screen.blit(staticnametext, (((screen.get_width())-(11*len('Name:')))/2, 140-16))
         # Blit the date text.
         screen.blit(datetxt_surface, (date_input_box.x+5, date_input_box.y+5))
-        staticnametext = font.render('Input charter birthdate (xxxxxx):', True, pygame.Color('white'))
-        screen.blit(staticnametext, (((screen.get_width())-(10*len('Input charter birthdate (xxxxxx):')))/2, 240-16))
+        staticnametext = font.render('Birthdate (xxxxxx):', True, pygame.Color('white'))
+        screen.blit(staticnametext, (((screen.get_width())-(10*len('Birthdate (xxxxxx):')))/2, 240-16))
         
 
         pygame.display.flip()
@@ -402,31 +447,10 @@ while not done:
 
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
-
-            if pos[0] > WINDOWMARGINX and pos[1] > WINDOWMARGINY:
-                try:
-                # Change the x/y screen coordinates to grid coordinates
-                    column = (pos[0] - WINDOWMARGINX)// (WIDTH + MARGIN)
-                    row = (pos[1] - WINDOWMARGINY)// (HEIGHT + MARGIN)
-                # Set that location to one
-                    grid[row][column] = 1
-                    print("Click ", pos, "Grid coordinates: ", row, column)
-                except:
-                    pass
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
-            #try:
-            # User clicks the mouse. Get the position
-            pos = pygame.mouse.get_pos()
-            if pos[0] > WINDOWMARGINX and pos[1] > WINDOWMARGINY:
-                try:
-                # Change the x/y screen coordinates to grid coordinates
-                    column = (pos[0] - WINDOWMARGINX) // (WIDTH + MARGIN)
-                    row = (pos[1] - WINDOWMARGINY) // (HEIGHT + MARGIN )
-                # Set that location to one
-                    grid[row][column] = 0
-                    print("Click ", pos, "Grid coordinates: ", row, column)
-                except:
-                    pass
+            
+            if current_tamagotchi.dead:
+                if menurect.collidepoint(pos):
+                    reset()
         #KEY TRIGGERS
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:
@@ -455,16 +479,16 @@ while not done:
                 else:
                     pygame.time.set_timer(pygame.USEREVENT+1,0)
                     paused = not paused
-        elif event.type==pygame.USEREVENT+1:
-            seconds_elapsed += 1
+        elif event.type==pygame.USEREVENT+1: 
             if not current_tamagotchi.dead:
+                seconds_elapsed += 1
                 current_tamagotchi.update()
                 if seconds_elapsed % 365 == 0:
                     current_tamagotchi.age += 1
                 if seconds_elapsed % 30 == 0:
                     current_tamagotchi.cash += 100
                     current_tamagotchi.popup_cash_state = True
-            if current_tamagotchi.hunger < 20:
+            if current_tamagotchi.hunger < 20 and not current_tamagotchi.dead:
                 sound_alarm()
 
         #Animation timer cycle
@@ -527,12 +551,15 @@ while not done:
 
 
     # Call for functions
-    food()
-    sleep()
-    timepassed()
-    popup()
-    cashnotification()
-    warning()
+    if current_tamagotchi.dead == False:
+        food()
+        sleep()
+        timepassed()
+        popup()
+        warning()
+        cashnotification()
+    if current_tamagotchi.dead:
+        deadscreen()
 
 
     # Limit to 60 frames per second
